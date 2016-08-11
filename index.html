@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Florida Sinkholes Test App</title>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.0/esri/css/main.css">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.0/dijit/themes/claro/claro.css">
+  <script src="https://js.arcgis.com/4.0/"></script>
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-bootstrap.min-v0.2.css">
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-arcgis-4.x.min-v0.2.css">
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+
+  <script>
+    require([
+        "esri/Map",
+        "esri/views/MapView",
+
+        "esri/layers/FeatureLayer",
+        "esri/widgets/Locate", "esri/widgets/Search",
+        "esri/widgets/Home", "esri/widgets/BasemapToggle",
+        "esri/PopupTemplate",
+
+        "dojo/domReady!"
+      ],
+      function(
+        Map, MapView,
+        FeatureLayer,
+        Locate, Search,
+        Home, BasemapToggle,
+        PopupTemplate
+      ) {
+
+        var map = new Map({
+          basemap: "gray"
+        });
+
+        var view = new MapView({
+          container: "viewDiv",
+          map: map,
+
+          extent: { // autocasts as new Extent()
+            xmin: -10154506.33362645,
+            ymin: 2803680.6056732214,
+            xmax: -8197718.409526457,
+            ymax: 3751499.7564091547,
+            spatialReference: 102100
+          }
+        });
+
+        /********************
+         * Add feature layer
+         ********************/
+
+		var template = new PopupTemplate({
+        title: "Florida Sinkhole Incident Reports",
+        content: "Sinkhold area = {SINAREA}" +
+          "<ul><li>Comments: {COMMENTS}</li>" +
+          "<li>County = {COUNTY}</li>" +
+          "<li>Reference Number {REF_NUM}</li><ul>",
+      });
+
+        var featureLayer = new FeatureLayer({
+          url: "http://services.arcgis.com/apTfC6SUmnNfnxuF/arcgis/rest/services/sinkholes/FeatureServer",
+          outFields: ["*"],
+        	popupTemplate: template
+        });
+
+        map.add(featureLayer);
+
+
+		var locateBtn = new Locate({
+        view: view
+      });
+      locateBtn.startup();
+
+      // Add the locate widget to the top left corner of the view
+      view.ui.add(locateBtn, {
+        position: "top-left",
+        index: 0
+      });
+
+		var searchWidget = new Search({
+        view: view
+      });
+      searchWidget.startup();
+
+      // Add the search widget to the top left corner of the view
+      view.ui.add(searchWidget, {
+        position: "top-left",
+        index: 0
+      });
+      
+      var searchWidget = new Search({
+        view: view
+      });
+      searchWidget.startup();
+
+      // Add the search widget to the top left corner of the view
+      view.ui.add(searchWidget, {
+        position: "top-left",
+        index: 0
+      });
+      
+      var homeBtn = new Home({
+        view: view
+      });
+      homeBtn.startup();
+
+      // Add the home widget to the top left corner of the view
+      view.ui.add(homeBtn, "top-left");
+
+        var toggle = new BasemapToggle({
+          view: view,
+          nextBasemap: "dark-gray"
+        });
+        toggle.startup();
+
+        // Add the BasemapToggle widget to the bottom left corner of the view
+        view.ui.add(toggle, "bottom-left");
+
+
+		
+
+      });
+  </script>
+</head>
+
+<body class="calcite-maps calcite-nav-top">
+
+  <!-- Navbar -->
+
+  <nav class="navbar calcite-navbar navbar-fixed-top calcite-text-light calcite-bg-dark">
+    <div class="dropdown calcite-dropdown calcite-text-dark calcite-bg-light" role="presentation"></div>
+
+    <div class="calcite-title calcite-overflow-hidden">
+      <span class="calcite-title-main">&nbsp;&nbsp;Florida Sinkholes Test App</span>
+      <span class="calcite-title-divider hidden-xs"></span>
+      <span class="calcite-title-sub hidden-xs">Explore Florida Sinkholes</span>
+    </div>
+
+    <ul class="nav navbar-nav calcite-nav">
+      <li class="active"><a id="mapNav" class="hidden-xs hidden-sm" href="#2dTab" aria-controls="2Dtab"
+          aria-expanded="true" role="tab" data-toggle="tab" data-tooltip="tip" title="2D View"
+          data-placement="bottom">Map</a></li>
+      <li>
+        <div class="calcite-navbar-search calcite-search-expander">
+          <div id="searchWidgetDiv"></div>
+        </div>
+      </li>
+    </ul>
+  </nav>
+  <!--/.calcite-navbar -->
+
+<body>
+	
+  <div id="viewDiv"></div>
+  
+</body>
+
+</html>
